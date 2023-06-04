@@ -14,6 +14,7 @@ export interface PageIndicatorProps extends ViewProps {
   opacity?: number;
   duration?: number;
   vertical?: boolean;
+  activeColor?: string;
   borderRadius?: number;
   easing?: EasingFunction;
   animatedCurrent?: Animated.Value | Animated.AnimatedInterpolation;
@@ -29,6 +30,7 @@ export const PageIndicator = ({
   opacity = 0.6,
   duration = 500,
   vertical = false,
+  activeColor = color,
   borderRadius = size / 2,
   easing = Easing.out(Easing.cubic),
   animatedCurrent,
@@ -60,6 +62,7 @@ export const PageIndicator = ({
           count={count}
           index={index}
           vertical={vertical}
+          activeColor={activeColor}
           stroke={Math.max(stroke, size * 2)}
           opacity={clamp(opacity, 0, 1)}
           borderRadius={clamp(borderRadius, 0, size / 2)}

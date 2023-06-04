@@ -10,6 +10,7 @@ interface IndicatorProps extends ViewProps {
   stroke: number;
   opacity: number;
   vertical: boolean;
+  activeColor: string;
   borderRadius: number;
   animatedValue: Animated.Value | Animated.AnimatedInterpolation;
 }
@@ -23,10 +24,12 @@ const Indicator = ({
   stroke,
   opacity,
   vertical,
+  activeColor,
   borderRadius,
   animatedValue,
 }: IndicatorProps) => {
   const offset = (stroke - size) / 2;
+  const overlay = activeColor !== color;
 
   const wrapperTranslate = animatedValue.interpolate({
     inputRange: [index - 1, index, index + 1],
@@ -43,10 +46,20 @@ const Indicator = ({
     [vertical ? 'marginVertical' : 'marginHorizontal']: gap / 2,
     opacity: animatedValue.interpolate({
       inputRange: [index - 1, index, index + 1],
-      outputRange: [opacity, 1, opacity],
+      outputRange: [opacity, overlay ? 0 : 1, opacity],
       extrapolate: 'clamp',
     }),
     transform: [vertical ? { translateY: wrapperTranslate } : { translateX: wrapperTranslate }],
+  };
+
+  const overlayStyles: Animated.AnimatedProps<ViewStyle> = {
+    ...wrapperStyles,
+    ...StyleSheet.absoluteFillObject,
+    opacity: animatedValue.interpolate({
+      inputRange: [index - 1, index, index + 1],
+      outputRange: [0, 1, 0],
+      extrapolate: 'clamp',
+    }),
   };
 
   const commonStyle: Animated.AnimatedProps<ViewStyle> = {
@@ -82,14 +95,26 @@ const Indicator = ({
   };
 
   return (
-    <Animated.View style={wrapperStyles}>
-      <View style={styles.mask}>
-        <Animated.View style={leftStyles} />
-      </View>
-      <View style={styles.mask}>
-        <Animated.View style={rightStyles} />
-      </View>
-    </Animated.View>
+    <View>
+      <Animated.View style={wrapperStyles}>
+        <View style={styles.mask}>
+          <Animated.View style={leftStyles} />
+        </View>
+        <View style={styles.mask}>
+          <Animated.View style={rightStyles} />
+        </View>
+      </Animated.View>
+      {overlay && (
+        <Animated.View style={overlayStyles}>
+          <View style={styles.mask}>
+            <Animated.View style={[leftStyles, { backgroundColor: activeColor }]} />
+          </View>
+          <View style={styles.mask}>
+            <Animated.View style={[rightStyles, { backgroundColor: activeColor }]} />
+          </View>
+        </Animated.View>
+      )}
+    </View>
   );
 };
 
