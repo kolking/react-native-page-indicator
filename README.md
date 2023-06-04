@@ -107,6 +107,7 @@ Prop | Type | Default | Description
 `count` | number | | The total number of pages (required)
 `current` | number | `0` | The current page index
 `color` | string | `black` | Color of the indicators
+`activeColor` | string | | Optional color of the active indicator
 `size` | number | `6` | Size of the indicators
 `gap` | number | `6` | Distance between the indicators
 `opacity` | number | `0.6` | Opacity of inactive indicators
