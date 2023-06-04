@@ -40,6 +40,7 @@ const App = () => {
   const { width, height } = useWindowDimensions();
   const [current, setCurrent] = useState(0);
   const scrollX = useRef(new Animated.Value(0)).current;
+  const animatedCurrent = useRef(Animated.divide(scrollX, width)).current;
 
   const handleScrollEnd = useCallback(
     (e: NativeSyntheticEvent<NativeScrollEvent>) => {
@@ -75,7 +76,7 @@ const App = () => {
         style={styles.pageIndicator}
         count={pages.length}
         //current={current}
-        animatedCurrent={Animated.divide(scrollX, width)}
+        animatedCurrent={animatedCurrent}
         color="white"
       />
     </View>
