@@ -1,11 +1,16 @@
 # React Native Page Indicator
 
-React Native component to display the current page of a swiper, slideshow, carousel etc. The package has zero dependencies and uses React Native's `Animated` API with native driver to produce silky-smooth animations.
+React Native component designed to display the current page of a swiper, slideshow, carousel, and more. You can choose from three pre-defined design variants and further customize the look and feel according to your specific requirements. All design variants support both horizontal and vertical orientations. This package has no dependencies and utilizes React Native's `Animated` API with the native driver to achieve seamless and fluid animations.
 
 Horizontal | Vertical
 ---|---
 <img width="390" src="https://user-images.githubusercontent.com/4656448/233733811-9d602089-9f55-403f-b51e-916785c15837.gif"> | <img width="390" src="https://user-images.githubusercontent.com/4656448/233733820-11baaa88-a752-49ce-b64e-27d82eb9bcb7.gif">
 
+## Design Variants
+
+Morse | Beads | Train
+---|---|---
+<img width="250" src="https://github.com/kolking/react-native-page-indicator/assets/4656448/373a54f6-a706-4478-8ff6-b06df69520ca"> | <img width="250" src="https://github.com/kolking/react-native-page-indicator/assets/4656448/0ce217c0-ace5-4ac5-90df-b7a6769bd459"> | <img width="250" src="https://github.com/kolking/react-native-page-indicator/assets/4656448/2f99a23b-1d6f-46c3-8a93-95e23c89777d">
 
 ## Installation
 
@@ -17,7 +22,7 @@ npm install react-native-page-indicator
 
 ## Basic example
 
-Pass the total number of pages in the `count` prop and the current page index in the `current` prop.
+Pass the total number of pages as the `count` prop and the current page index as the `current` prop.
 
 ```jsx
 import React from 'react';
@@ -43,7 +48,7 @@ export default MyComponent;
 
 ## Advanced example
 
-For a more appealing experience when the indicator directly responds to scroll position, you should pass the current page index of `Animated.Value` type to `animatedCurrent` prop. The simplest way to obtain the value is to divide scroll position by the page width (for horizontal scrolling) or page height (for vertical scrolling).
+To create a more engaging experience where the indicator dynamically responds to the scroll position, you can pass the current page index as an `Animated.Value` rather than a regular number. The easiest approach to obtain the animated value is by dividing the corresponding scroll position by the page width (for horizontal scrolling) or page height (for vertical scrolling).
 
 ```jsx
 import React, { useRef } from 'react';
@@ -55,6 +60,7 @@ const pages = ['Page 1', 'Page 2', 'Page 3'];
 const App = () => {
   const { width, height } = useWindowDimensions();
   const scrollX = useRef(new Animated.Value(0)).current;
+  const animatedCurrent = useRef(Animated.divide(scrollX, width)).current;
 
   return (
     <View style={styles.root}>
@@ -75,7 +81,7 @@ const App = () => {
       <PageIndicator
         style={styles.pageIndicator}
         count={pages.length}
-        animatedCurrent={Animated.divide(scrollX, width)}
+        current={animatedCurrent}
       />
     </View>
   );
@@ -90,8 +96,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   pageIndicator: {
-    left: 0,
-    right: 0,
+    left: 20,
+    right: 20,
     bottom: 50,
     position: 'absolute',
   },
@@ -100,24 +106,43 @@ const styles = StyleSheet.create({
 export default App;
 ```
 
-## Props
+## Common Props
 
 Prop | Type | Default | Description
 ---|---|---|---
 `count` | number | | The total number of pages (required)
-`current` | number | `0` | The current page index
+`current` | number \| Animated.Value | `0` | The current page index can be either a number or an animated value obtained from the scroll position
+`variant` | 'morse' \| 'beads' \| 'train' | `morse` | Pre-defined design variant
+`vertical` | boolean | `false` | When `true` the indicators will be stacked vertically
 `color` | string | `black` | Color of the indicators
 `activeColor` | string | | Optional color of the active indicator
-`size` | number | `6` | Size of the indicators
 `gap` | number | `6` | Distance between the indicators
-`opacity` | number | `0.6` | Opacity of inactive indicators
-`stroke` | number | `size * 4` | Length of the active indicator stroke
+`opacity` | number | `0.5` | Opacity of the inactive indicators
 `borderRadius` | number | `size / 2` | Border radius of the indicators
-`vertical` | boolean | `false` | When `true` the indicators will be stacked vertically
-`duration` | number | `500` | Duration of the animation (has no effect when `animatedCurrent` provided)
-`easing` | EasingFunction | `Easing.out(Easing.cubic)` | Easing function, see [available options](https://reactnative.dev/docs/easing)
-`animatedCurrent` | Animated.Value | | Animated current page index
-`style`| ViewStyle | | Style object applied to the wrapping View
+`duration` | number | `500` | Animation duration (has no effect when `Animated.Value` is provided for the `current` prop)
+`easing` | EasingFunction | `Easing.out()` | Animation easing function (has no effect when `Animated.Value` is provided for the `current` prop)
+`style`| ViewStyle | | Style object applied to the wrapping view
+
+## Morse Variant Props
+
+Prop | Type | Default | Description
+---|---|---|---
+`size` | number | `6` | Size of the inactive indicators and the thickness of the active indicator
+`dashSize` | number | `size * 4` | Length of the active indicator, cannot be smaller than `size * 2`
+
+## Train Variant Props
+
+Prop | Type | Default | Description
+---|---|---|---
+`size` | number | `6` | Thickness of the indicators
+`dashSize` | number | `size * 4` | Length of the indicators, setting it to `0` will stretch the indicators to the available width
+
+## Beads Variant Props
+
+Prop | Type | Default | Description
+---|---|---|---
+`size` | number | `6` | Size of the indicators
+`scale` | number | `1.5` | Scaling factor of the active indicator
 
 ## License
 

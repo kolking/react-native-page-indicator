@@ -7,8 +7,8 @@ interface IndicatorProps extends ViewProps {
   color: string;
   count: number;
   index: number;
-  stroke: number;
   opacity: number;
+  dashSize: number;
   vertical: boolean;
   activeColor: string;
   borderRadius: number;
@@ -21,17 +21,21 @@ const Indicator = ({
   color,
   count,
   index,
-  stroke,
   opacity,
+  dashSize,
   vertical,
   activeColor,
   borderRadius,
   animatedValue,
 }: IndicatorProps) => {
-  const offset = (stroke - size) / 2;
+  const offset = (dashSize - size) / 2;
   const overlay = activeColor !== color;
 
-  const wrapperTranslate = animatedValue.interpolate({
+  const rootStyles: ViewStyle = {
+    [vertical ? 'marginVertical' : 'marginHorizontal']: gap / 2,
+  };
+
+  const translateWrapper = animatedValue.interpolate({
     inputRange: [index - 1, index, index + 1],
     outputRange: [
       offset * (count - 2 * index),
@@ -43,13 +47,12 @@ const Indicator = ({
 
   const wrapperStyles: Animated.AnimatedProps<ViewStyle> = {
     flexDirection: vertical ? 'column' : 'row',
-    [vertical ? 'marginVertical' : 'marginHorizontal']: gap / 2,
     opacity: animatedValue.interpolate({
       inputRange: [index - 1, index, index + 1],
       outputRange: [opacity, overlay ? 0 : 1, opacity],
       extrapolate: 'clamp',
     }),
-    transform: [vertical ? { translateY: wrapperTranslate } : { translateX: wrapperTranslate }],
+    transform: [vertical ? { translateY: translateWrapper } : { translateX: translateWrapper }],
   };
 
   const overlayStyles: Animated.AnimatedProps<ViewStyle> = {
@@ -63,18 +66,18 @@ const Indicator = ({
   };
 
   const commonStyle: Animated.AnimatedProps<ViewStyle> = {
-    width: vertical ? size : stroke / 2,
-    height: vertical ? stroke / 2 : size,
+    width: vertical ? size : dashSize / 2,
+    height: vertical ? dashSize / 2 : size,
     backgroundColor: color,
   };
 
-  const leftTranslate = animatedValue.interpolate({
+  const translateLeft = animatedValue.interpolate({
     inputRange: [index - 1, index, index + 1],
     outputRange: [offset, 0, offset],
     extrapolate: 'clamp',
   });
 
-  const rightTranslate = animatedValue.interpolate({
+  const translateRight = animatedValue.interpolate({
     inputRange: [index - 1, index, index + 1],
     outputRange: [-offset, 0, -offset],
     extrapolate: 'clamp',
@@ -84,18 +87,18 @@ const Indicator = ({
     ...commonStyle,
     borderTopLeftRadius: borderRadius,
     [vertical ? 'borderTopRightRadius' : 'borderBottomLeftRadius']: borderRadius,
-    transform: [vertical ? { translateY: leftTranslate } : { translateX: leftTranslate }],
+    transform: [vertical ? { translateY: translateLeft } : { translateX: translateLeft }],
   };
 
   const rightStyles: Animated.AnimatedProps<ViewStyle> = {
     ...commonStyle,
     borderBottomRightRadius: borderRadius,
     [vertical ? 'borderBottomLeftRadius' : 'borderTopRightRadius']: borderRadius,
-    transform: [vertical ? { translateY: rightTranslate } : { translateX: rightTranslate }],
+    transform: [vertical ? { translateY: translateRight } : { translateX: translateRight }],
   };
 
   return (
-    <View>
+    <View style={rootStyles}>
       <Animated.View style={wrapperStyles}>
         <View style={styles.mask}>
           <Animated.View style={leftStyles} />
@@ -124,4 +127,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Indicator;
+export default React.memo(Indicator);

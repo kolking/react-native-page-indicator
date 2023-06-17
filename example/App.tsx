@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
 import {
   Animated,
   NativeScrollEvent,
@@ -9,7 +9,8 @@ import {
   View,
   useWindowDimensions,
 } from 'react-native';
-import { PageIndicator } from 'react-native-page-indicator';
+import { PageIndicator, PageIndicatorProps } from 'react-native-page-indicator';
+import Segmented from './Segmented';
 
 StatusBar.setBarStyle('light-content');
 
@@ -36,48 +37,87 @@ const pages = [
   },
 ];
 
+const variants = [
+  {
+    value: 'morse',
+    text: 'Morse',
+  },
+  {
+    value: 'beads',
+    text: 'Beads',
+  },
+  {
+    value: 'train',
+    text: 'Train',
+  },
+];
+
+const orientation = [
+  {
+    value: false,
+    text: 'Horizontal',
+  },
+  {
+    value: true,
+    text: 'Vertical',
+  },
+];
+
 const App = () => {
   const { width, height } = useWindowDimensions();
   const [current, setCurrent] = useState(0);
-  const scrollX = useRef(new Animated.Value(0)).current;
-  const animatedCurrent = useRef(Animated.divide(scrollX, width)).current;
+  const [variant, setVariant] = useState<PageIndicatorProps['variant']>('morse');
+  const [vertical, setVertical] = useState<PageIndicatorProps['vertical']>(false);
+
+  const pageSize = vertical ? height : width;
+  const offsetProp = vertical ? 'y' : 'x';
+  const scrollValue = useRef(new Animated.Value(0)).current;
+  const animatedCurrent = useMemo(
+    () => Animated.divide(scrollValue, pageSize),
+    [scrollValue, pageSize],
+  );
 
   const handleScrollEnd = useCallback(
-    (e: NativeSyntheticEvent<NativeScrollEvent>) => {
-      const viewIndex = Math.round(e.nativeEvent.contentOffset.x / width);
-
+    ({ nativeEvent: { contentOffset } }: NativeSyntheticEvent<NativeScrollEvent>) => {
+      const viewIndex = Math.round(contentOffset[offsetProp] / pageSize);
       if (viewIndex !== current) {
         setCurrent(viewIndex);
       }
     },
-    [width, current],
+    [offsetProp, pageSize, current],
   );
 
   return (
     <View style={styles.root}>
       <Animated.ScrollView
-        horizontal={true}
+        horizontal={!vertical}
         pagingEnabled={true}
         scrollEventThrottle={1}
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
         onMomentumScrollEnd={handleScrollEnd}
-        onScroll={Animated.event([{ nativeEvent: { contentOffset: { x: scrollX } } }], {
-          useNativeDriver: true,
-        })}
+        onScroll={Animated.event(
+          [{ nativeEvent: { contentOffset: { [offsetProp]: scrollValue } } }],
+          { useNativeDriver: true },
+        )}
       >
-        {pages.map((page, index) => (
-          <View key={index} style={[styles.page, { width, height, backgroundColor: page.color }]}>
-            <Text style={styles.title}>{page.title}</Text>
+        {pages.map(({ title, color: backgroundColor }, index) => (
+          <View key={index} style={[styles.page, { width, height, backgroundColor }]}>
+            <Text style={styles.title}>{title}</Text>
+            <Segmented items={variants} selected={variant} onChange={setVariant} />
+            <Segmented items={orientation} selected={vertical} onChange={setVertical} />
           </View>
         ))}
       </Animated.ScrollView>
       <PageIndicator
-        style={styles.pageIndicator}
+        key={`${variant}-${vertical ? 'ver' : 'hor'}`}
+        style={vertical ? styles.vIndicator : styles.hIndicator}
         count={pages.length}
-        //current={current}
-        animatedCurrent={animatedCurrent}
+        current={animatedCurrent}
+        variant={variant}
+        vertical={vertical}
         color="white"
+        //dashSize={0}
       />
     </View>
   );
@@ -91,16 +131,23 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  pageIndicator: {
-    left: 0,
-    right: 0,
+  hIndicator: {
+    left: 20,
+    right: 20,
     bottom: 50,
+    position: 'absolute',
+  },
+  vIndicator: {
+    top: 80,
+    right: 20,
+    bottom: 80,
     position: 'absolute',
   },
   title: {
     fontSize: 28,
-    fontWeight: '700',
     color: 'white',
+    marginBottom: 10,
+    fontWeight: '700',
   },
 });
 
