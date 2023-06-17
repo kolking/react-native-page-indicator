@@ -28,9 +28,10 @@
   "react-native": "src/index",
   "source": "src/index",
   "scripts": {
-    "test": "jest",
+    "test": "jest --passWithNoTests",
     "lint": "eslint --ext .js,.jsx,.ts,.tsx ./",
-    "validate": "yarn tsc && yarn lint --fix && yarn test -u"
+    "validate": "yarn tsc && yarn lint --fix && yarn test -u",
+    "install-all": "yarn && cd example && yarn && npx pod-install"
   },
   "dependencies": {},
   "devDependencies": {
