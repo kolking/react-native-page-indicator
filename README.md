@@ -14,9 +14,12 @@ Morse | Beads | Train
 
 ## Installation
 
+### yarn
 ```sh
 yarn add react-native-page-indicator
-# or
+```
+### npm
+```sh
 npm install react-native-page-indicator
 ```
 
@@ -144,6 +147,10 @@ Prop | Type | Default | Description
 `size` | number | `6` | Size of the indicators
 `scale` | number | `1.5` | Scaling factor of the active indicator
 
+## Feedback
+
+I appreciate your feedback, so please star the repository if you like it. This is the best motivation for me to maintain the package and add new features. If you have any feature requests, found a bug, or have ideas for improvement, feel free to [open an issue](https://github.com/kolking/react-native-page-indicator/issues).
+
 ## License
 
-MIT
+Licensed under the MIT license.
