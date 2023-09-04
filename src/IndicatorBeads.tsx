@@ -11,7 +11,7 @@ interface IndicatorProps extends ViewProps {
   vertical: boolean;
   activeColor: string;
   borderRadius: number;
-  animatedValue: Animated.Value | Animated.AnimatedInterpolation;
+  animatedValue: Animated.Value | ReturnType<Animated.Value['interpolate']>;
 }
 
 const IndicatorBeads = ({

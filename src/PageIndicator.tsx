@@ -23,7 +23,7 @@ enum Variants {
 export interface PageIndicatorProps extends ViewProps {
   count: number;
   variant?: `${Variants}`;
-  current?: number | Animated.Value | Animated.AnimatedInterpolation;
+  current?: number | Animated.Value | ReturnType<Animated.Value['interpolate']>;
   gap?: number;
   size?: number;
   color?: string;
