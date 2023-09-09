@@ -9,7 +9,7 @@ import {
   ViewProps,
 } from 'react-native';
 
-import { clamp } from './helpers';
+import { clamp, evenPixelRound } from './helpers';
 import IndicatorMorse from './IndicatorMorse';
 import IndicatorBeads from './IndicatorBeads';
 import IndicatorTrain from './IndicatorTrain';
@@ -46,16 +46,20 @@ export const PageIndicator = ({
   color = 'black',
   scale = 1.5,
   opacity = 0.5,
-  dashSize = size * 4,
+  dashSize,
   duration = 500,
   vertical = false,
   activeColor = color,
-  borderRadius = size / 2,
+  borderRadius,
   easing = Easing.out(Easing.cubic),
   style,
   ...props
 }: PageIndicatorProps) => {
-  const [trainStroke, setTrainStroke] = useState(dashSize);
+  const pixelSize = evenPixelRound(size);
+  const pixelDashSize = evenPixelRound(dashSize ?? pixelSize * 4);
+  const pixelBorderRadius = clamp(borderRadius ?? pixelSize / 2, 0, pixelSize / 2);
+
+  const [trainStroke, setTrainStroke] = useState(pixelDashSize);
   const shouldAnimate = typeof current === 'number';
   const flexDirection = vertical ? 'column' : 'row';
   const animatedValue = useRef(
@@ -75,12 +79,12 @@ export const PageIndicator = ({
 
   const handleLayout = useCallback(
     (e: LayoutChangeEvent) => {
-      if (variant === Variants.TRAIN && dashSize === 0) {
+      if (variant === Variants.TRAIN && pixelDashSize === 0) {
         const { width, height } = e.nativeEvent.layout;
         setTrainStroke((vertical ? height : width) / count - gap);
       }
     },
-    [variant, dashSize, vertical, count, gap],
+    [variant, pixelDashSize, vertical, count, gap],
   );
 
   return (
@@ -95,14 +99,14 @@ export const PageIndicator = ({
           <IndicatorBeads
             key={index}
             gap={gap}
-            size={size}
+            size={pixelSize}
             color={color}
             index={index}
             scale={scale}
             vertical={vertical}
             activeColor={activeColor}
             opacity={clamp(opacity, 0, 1)}
-            borderRadius={clamp(borderRadius, 0, size / 2)}
+            borderRadius={pixelBorderRadius}
             animatedValue={animatedValue}
           />
         ) : variant === Variants.TRAIN ? (
@@ -116,22 +120,22 @@ export const PageIndicator = ({
             activeColor={activeColor}
             dashSize={trainStroke}
             opacity={clamp(opacity, 0, 1)}
-            borderRadius={clamp(borderRadius, 0, size / 2)}
+            borderRadius={pixelBorderRadius}
             animatedValue={animatedValue}
           />
         ) : (
           <IndicatorMorse
             key={index}
             gap={gap}
-            size={size}
+            size={pixelSize}
             color={color}
             count={count}
             index={index}
             vertical={vertical}
             activeColor={activeColor}
-            dashSize={Math.max(dashSize, size * 2)}
+            dashSize={Math.max(pixelDashSize, pixelSize * 2)}
             opacity={clamp(opacity, 0, 1)}
-            borderRadius={clamp(borderRadius, 0, size / 2)}
+            borderRadius={pixelBorderRadius}
             animatedValue={animatedValue}
           />
         ),
