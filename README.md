@@ -81,11 +81,9 @@ const App = () => {
           </View>
         ))}
       </Animated.ScrollView>
-      <PageIndicator
-        style={styles.pageIndicator}
-        count={pages.length}
-        current={animatedCurrent}
-      />
+      <View style={styles.pageIndicator}>
+        <PageIndicator count={pages.length} current={animatedCurrent} />
+      </View>
     </View>
   );
 };
@@ -103,6 +101,8 @@ const styles = StyleSheet.create({
     right: 20,
     bottom: 50,
     position: 'absolute',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
 
