@@ -4,9 +4,11 @@ import {
   Easing,
   EasingFunction,
   LayoutChangeEvent,
+  StyleProp,
   StyleSheet,
   View,
   ViewProps,
+  ViewStyle,
 } from 'react-native';
 
 import { clamp, evenPixelRound } from './helpers';
@@ -87,13 +89,16 @@ export const PageIndicator = ({
     [variant, pixelDashSize, vertical, count, gap],
   );
 
+  const rootStyle: StyleProp<ViewStyle> = [styles.root, style, { flexDirection }];
+
+  if (variant === Variants.MORSE) {
+    rootStyle.push({
+      [vertical ? 'height' : 'width']: pixelDashSize + pixelSize * (count - 1) + gap * count,
+    });
+  }
+
   return (
-    <View
-      {...props}
-      style={[styles.root, style, { flexDirection }]}
-      pointerEvents="none"
-      onLayout={handleLayout}
-    >
+    <View {...props} style={rootStyle} pointerEvents="none" onLayout={handleLayout}>
       {[...Array(count).keys()].map((index) =>
         variant === Variants.BEADS ? (
           <IndicatorBeads

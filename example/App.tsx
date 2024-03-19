@@ -109,16 +109,17 @@ const App = () => {
           </View>
         ))}
       </Animated.ScrollView>
-      <PageIndicator
-        key={`${variant}-${vertical ? 'ver' : 'hor'}`}
-        style={vertical ? styles.vIndicator : styles.hIndicator}
-        count={pages.length}
-        current={animatedCurrent}
-        variant={variant}
-        vertical={vertical}
-        color="white"
-        //dashSize={0}
-      />
+      <View style={[styles.indicator, vertical ? styles.vIndicator : styles.hIndicator]}>
+        <PageIndicator
+          key={`${variant}-${vertical ? 'ver' : 'hor'}`}
+          count={pages.length}
+          current={animatedCurrent}
+          variant={variant}
+          vertical={vertical}
+          color="white"
+          //dashSize={0}
+        />
+      </View>
     </View>
   );
 };
@@ -131,17 +132,20 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  indicator: {
+    position: 'absolute',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   hIndicator: {
     left: 20,
     right: 20,
     bottom: 50,
-    position: 'absolute',
   },
   vIndicator: {
     top: 80,
     right: 20,
     bottom: 80,
-    position: 'absolute',
   },
   title: {
     fontSize: 28,
