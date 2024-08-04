@@ -1,6 +1,6 @@
 {
   "name": "react-native-page-indicator",
-  "version": "2.3.0",
+  "version": "2.3.1",
   "description": "React Native component to display the current page of a swiper, slideshow, carousel etc.",
   "author": "Nick Seryakov (https://github.com/kolking)",
   "license": "MIT",
