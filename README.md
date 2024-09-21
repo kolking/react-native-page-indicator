@@ -114,7 +114,7 @@ export default App;
 Prop | Type | Default | Description
 ---|---|---|---
 `count` | number | | The total number of pages (required)
-`current` | number \| Animated.Value | `0` | The current page index can be either a number or an animated value obtained from the scroll position
+`current` | number \| Animated.Value | `0` | The current page index can be either a number or an animated value obtained from the scroll position
 `variant` | 'morse' \| 'beads' \| 'train' | `morse` | Pre-defined design variant
 `vertical` | boolean | `false` | When `true` the indicators will be stacked vertically
 `color` | string | `black` | Color of the indicators
@@ -138,7 +138,7 @@ Prop | Type | Default | Description
 Prop | Type | Default | Description
 ---|---|---|---
 `size` | number | `6` | Thickness of the indicators
-`dashSize` | number | `size * 4` | Length of the indicators, setting it to `0` will stretch the indicators to the available width
+`dashSize` | number | `size * 4` | Length of the indicators, cannot be smaller then `size`
 
 ## Beads Variant Props
 

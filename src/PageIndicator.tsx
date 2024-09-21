@@ -1,9 +1,8 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import {
   Animated,
   Easing,
   EasingFunction,
-  LayoutChangeEvent,
   StyleProp,
   StyleSheet,
   View,
@@ -61,7 +60,6 @@ export const PageIndicator = ({
   const pixelDashSize = evenPixelRound(dashSize ?? pixelSize * 4);
   const pixelBorderRadius = clamp(borderRadius ?? pixelSize / 2, 0, pixelSize / 2);
 
-  const [trainStroke, setTrainStroke] = useState(pixelDashSize);
   const shouldAnimate = typeof current === 'number';
   const flexDirection = vertical ? 'column' : 'row';
   const animatedValue = useRef(
@@ -79,26 +77,18 @@ export const PageIndicator = ({
     }
   }, [shouldAnimate, animatedValue, current, count, duration, easing]);
 
-  const handleLayout = useCallback(
-    (e: LayoutChangeEvent) => {
-      if (variant === Variants.TRAIN && pixelDashSize === 0) {
-        const { width, height } = e.nativeEvent.layout;
-        setTrainStroke((vertical ? height : width) / count - gap);
-      }
-    },
-    [variant, pixelDashSize, vertical, count, gap],
-  );
-
+  const trainDashSize = Math.max(pixelDashSize, pixelSize);
+  const morseDashSize = Math.max(pixelDashSize, pixelSize * 2);
   const rootStyle: StyleProp<ViewStyle> = [styles.root, style, { flexDirection }];
 
   if (variant === Variants.MORSE) {
     rootStyle.push({
-      [vertical ? 'height' : 'width']: pixelDashSize + pixelSize * (count - 1) + gap * count,
+      [vertical ? 'height' : 'width']: morseDashSize + pixelSize * (count - 1) + gap * count,
     });
   }
 
   return (
-    <View {...props} style={rootStyle} pointerEvents="none" onLayout={handleLayout}>
+    <View {...props} style={rootStyle} pointerEvents="none">
       {[...Array(count).keys()].map((index) =>
         variant === Variants.BEADS ? (
           <IndicatorBeads
@@ -123,7 +113,7 @@ export const PageIndicator = ({
             index={index}
             vertical={vertical}
             activeColor={activeColor}
-            dashSize={trainStroke}
+            dashSize={trainDashSize}
             opacity={clamp(opacity, 0, 1)}
             borderRadius={pixelBorderRadius}
             animatedValue={animatedValue}
@@ -138,7 +128,7 @@ export const PageIndicator = ({
             index={index}
             vertical={vertical}
             activeColor={activeColor}
-            dashSize={Math.max(pixelDashSize, pixelSize * 2)}
+            dashSize={morseDashSize}
             opacity={clamp(opacity, 0, 1)}
             borderRadius={pixelBorderRadius}
             animatedValue={animatedValue}
