@@ -63,7 +63,7 @@ const rtl = false;
 
 const App = () => {
   const { width, height } = useWindowDimensions();
-  const scrollX = useRef(new Animated.Value(rtl ? width * 2 : 0)).current;
+  const scrollX = useRef(new Animated.Value(rtl ? width * (pages.length - 1) : 0)).current;
   const animatedCurrent = useRef(Animated.divide(scrollX, width)).current;
 
   return (
