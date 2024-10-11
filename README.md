@@ -59,10 +59,11 @@ import { Animated, StyleSheet, Text, View, useWindowDimensions } from 'react-nat
 import { PageIndicator } from 'react-native-page-indicator';
 
 const pages = ['Page 1', 'Page 2', 'Page 3'];
+const rtl = false;
 
 const App = () => {
   const { width, height } = useWindowDimensions();
-  const scrollX = useRef(new Animated.Value(0)).current;
+  const scrollX = useRef(new Animated.Value(rtl ? width * 2 : 0)).current;
   const animatedCurrent = useRef(Animated.divide(scrollX, width)).current;
 
   return (
@@ -117,6 +118,7 @@ Prop | Type | Default | Description
 `current` | number \| Animated.Value | `0` | The current page index can be either a number or an animated value obtained from the scroll position
 `variant` | 'morse' \| 'beads' \| 'train' | `morse` | Pre-defined design variant
 `vertical` | boolean | `false` | When `true` the indicators will be stacked vertically
+`rtl` | boolean | `false` | When `true` right to left support will be enabled 
 `color` | string | `black` | Color of the indicators
 `activeColor` | string | | Optional color of the active indicator
 `gap` | number | `6` | Distance between the indicators
