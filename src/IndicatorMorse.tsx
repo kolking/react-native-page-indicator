@@ -10,6 +10,7 @@ interface IndicatorProps extends ViewProps {
   opacity: number;
   dashSize: number;
   vertical: boolean;
+  rtl: boolean;
   activeColor: string;
   borderRadius: number;
   animatedValue: Animated.Value | ReturnType<Animated.Value['interpolate']>;
@@ -24,6 +25,7 @@ const Indicator = ({
   opacity,
   dashSize,
   vertical,
+  rtl,
   activeColor,
   borderRadius,
   animatedValue,
@@ -46,7 +48,7 @@ const Indicator = ({
   });
 
   const wrapperStyles: Animated.AnimatedProps<ViewStyle> = {
-    flexDirection: vertical ? 'column' : 'row',
+    flexDirection: vertical ? 'column' : rtl ? 'row-reverse' :'row',
     opacity: animatedValue.interpolate({
       inputRange: [index - 1, index, index + 1],
       outputRange: [opacity, overlay ? 0 : 1, opacity],
@@ -85,15 +87,15 @@ const Indicator = ({
 
   const leftStyles: Animated.AnimatedProps<ViewStyle> = {
     ...commonStyle,
-    borderTopLeftRadius: borderRadius,
-    [vertical ? 'borderTopRightRadius' : 'borderBottomLeftRadius']: borderRadius,
+    [rtl ? 'borderTopRightRadius' : 'borderTopLeftRadius']: borderRadius,
+    [vertical ? 'borderTopRightRadius' : rtl ? 'borderBottomRightRadius' : 'borderBottomLeftRadius']: borderRadius,
     transform: [vertical ? { translateY: translateLeft } : { translateX: translateLeft }],
   };
 
   const rightStyles: Animated.AnimatedProps<ViewStyle> = {
     ...commonStyle,
-    borderBottomRightRadius: borderRadius,
-    [vertical ? 'borderBottomLeftRadius' : 'borderTopRightRadius']: borderRadius,
+    [rtl ? 'borderBottomLeftRadius' : 'borderBottomRightRadius']: borderRadius,
+    [vertical ? 'borderBottomLeftRadius' : rtl ? 'borderTopLeftRadius' : 'borderTopRightRadius']: borderRadius,
     transform: [vertical ? { translateY: translateRight } : { translateX: translateRight }],
   };
 
