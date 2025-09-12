@@ -141,6 +141,7 @@ export const PageIndicator = ({
 
 const styles = StyleSheet.create({
   root: {
+    direction: 'ltr',
     alignItems: 'center',
     justifyContent: 'center',
   },
