@@ -57,7 +57,7 @@ const Indicator = ({
 
   const overlayStyles: Animated.AnimatedProps<ViewStyle> = {
     ...wrapperStyles,
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
     opacity: animatedValue.interpolate({
       inputRange: [index - 1, index, index + 1],
       outputRange: [0, 1, 0],

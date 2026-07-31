@@ -53,7 +53,7 @@ const IndicatorBeads = ({
 
   const overlayStyles: Animated.AnimatedProps<ViewStyle> = {
     ...baseStyles,
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
     backgroundColor: activeColor,
     opacity: animatedValue.interpolate({
       inputRange: [index - 1, index, index + 1],

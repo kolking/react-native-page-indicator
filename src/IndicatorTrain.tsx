@@ -35,7 +35,7 @@ const IndicatorTrain = ({
   };
 
   const baseStyles: Animated.AnimatedProps<ViewStyle> = {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
     opacity,
     backgroundColor: color,
   };
@@ -47,7 +47,7 @@ const IndicatorTrain = ({
   });
 
   const overlayStyles: Animated.AnimatedProps<ViewStyle> = {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
     opacity: 1,
     backgroundColor: activeColor,
     transform: [vertical ? { translateY: translateOverlay } : { translateX: translateOverlay }],
