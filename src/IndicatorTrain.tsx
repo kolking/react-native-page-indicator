@@ -1,5 +1,6 @@
 import React from 'react';
 import { Animated, StyleSheet, View, ViewStyle, ViewProps } from 'react-native';
+import type { InterpolatableAnimatedValue } from './helpers';
 
 interface IndicatorProps extends ViewProps {
   gap: number;
@@ -11,7 +12,7 @@ interface IndicatorProps extends ViewProps {
   vertical: boolean;
   activeColor: string;
   borderRadius: number;
-  animatedValue: Animated.Value | ReturnType<Animated.Value['interpolate']>;
+  animatedValue: InterpolatableAnimatedValue;
 }
 
 const IndicatorTrain = ({

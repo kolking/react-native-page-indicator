@@ -79,7 +79,7 @@ export const PageIndicator = ({
 
   const trainDashSize = Math.max(pixelDashSize, pixelSize);
   const morseDashSize = Math.max(pixelDashSize, pixelSize * 2);
-  const rootStyle: StyleProp<ViewStyle> = [styles.root, style, { flexDirection }];
+  const rootStyle: Array<StyleProp<ViewStyle>> = [styles.root, style, { flexDirection }];
 
   if (variant === Variants.MORSE) {
     rootStyle.push({
