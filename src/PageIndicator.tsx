@@ -33,6 +33,7 @@ export interface PageIndicatorProps extends ViewProps {
   dashSize?: number;
   duration?: number;
   vertical?: boolean;
+  rtl?: boolean;
   activeColor?: string;
   borderRadius?: number;
   easing?: EasingFunction;
@@ -50,6 +51,7 @@ export const PageIndicator = ({
   dashSize,
   duration = 500,
   vertical = false,
+  rtl = false,
   activeColor = color,
   borderRadius,
   easing = Easing.out(Easing.cubic),
@@ -61,7 +63,7 @@ export const PageIndicator = ({
   const pixelBorderRadius = clamp(borderRadius ?? pixelSize / 2, 0, pixelSize / 2);
 
   const shouldAnimate = typeof current === 'number';
-  const flexDirection = vertical ? 'column' : 'row';
+  const flexDirection = vertical ? 'column' : rtl ? 'row-reverse' : 'row';
   const animatedValue = useRef(
     shouldAnimate ? new Animated.Value(clamp(current, 0, count)) : current,
   ).current;
@@ -99,6 +101,7 @@ export const PageIndicator = ({
             index={index}
             scale={scale}
             vertical={vertical}
+            rtl={rtl}
             activeColor={activeColor}
             opacity={clamp(opacity, 0, 1)}
             borderRadius={pixelBorderRadius}
@@ -112,6 +115,7 @@ export const PageIndicator = ({
             color={color}
             index={index}
             vertical={vertical}
+            rtl={rtl}
             activeColor={activeColor}
             dashSize={trainDashSize}
             opacity={clamp(opacity, 0, 1)}
@@ -127,6 +131,7 @@ export const PageIndicator = ({
             count={count}
             index={index}
             vertical={vertical}
+            rtl={rtl}
             activeColor={activeColor}
             dashSize={morseDashSize}
             opacity={clamp(opacity, 0, 1)}
